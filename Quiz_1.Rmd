@@ -1,0 +1,65 @@
+---
+title: "QUIZ01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+```{r}
+library(curl)
+```
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+z <- file.choose()
+```
+
+```{r}
+z1 <- curl(z)
+```
+ 
+```{r}
+z2 <- read.csv(z1, header = TRUE, sep = ",", stringsAsFactors = FALSE)
+```
+
+```{r}
+f <- f <- curl(file.choose())
+```
+
+```{r}
+d <- read.csv(f, header = TRUE, sep = ",", stringsAsFactors = FALSE)
+```
+Error in open.connection(file, "rt") : Port number ended with '\'
+```{r}
+library(curl)
+f <- f <- curl("https://raw.githubusercontent.com/fuzzyatelin/fuzzyatelin.github.io/master/AN597_Fall17/zombies.csv")
+d <- read.csv(f, header = TRUE, sep = ",", stringsAsFactors = FALSE)
+head(d)
+```
+```{r}
+aggregate(x = d["female"], by = d["age"], FUN = "mean", na.rm = TRUE)
+```
+
+
+
+
