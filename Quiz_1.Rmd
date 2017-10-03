@@ -56,10 +56,27 @@ f <- f <- curl("https://raw.githubusercontent.com/fuzzyatelin/fuzzyatelin.github
 d <- read.csv(f, header = TRUE, sep = ",", stringsAsFactors = FALSE)
 head(d)
 ```
+
 ```{r}
 aggregate(x = d["female"], by = d["age"], FUN = "mean", na.rm = TRUE)
 ```
+#Quiz 2
+I dot know how to do this so I'll be seeing you in office hours
+```{r}
+f$female <- f$gender(Male=FALSE)
+```
+```{r}
+df2<-d[c('first_name','last_name','gender','height','weight','zombies_killed')]
+df2
+```
+im not sure how to use the mutate thing 
+```{r}
+heightgreater <-mutate(df2, height = height>65)
+```
+```{r}
+height <- c(1:1000)
+zombies_killed <- seq(1,1000)
 
-
-
-
+plot(height, zombies_killed, type="l")
+```
+I belive this is just the general height and im trying to figure out how to break height into two fiffrent catagories but cant figure that out or how to get just females
