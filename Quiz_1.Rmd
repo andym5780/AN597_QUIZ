@@ -30,23 +30,23 @@ library(curl)
 ```
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 
-```{r}
+```{r, eval=FALSE}
 z <- file.choose()
 ```
 
-```{r}
+```{r, eval=FALSE}
 z1 <- curl(z)
 ```
  
-```{r}
+```{r, eval=FALSE}
 z2 <- read.csv(z1, header = TRUE, sep = ",", stringsAsFactors = FALSE)
 ```
 
-```{r}
+```{r, eval=FALSE}
 f <- f <- curl(file.choose())
 ```
 
-```{r}
+```{r, eval=FALSE}
 d <- read.csv(f, header = TRUE, sep = ",", stringsAsFactors = FALSE)
 ```
 Error in open.connection(file, "rt") : Port number ended with '\'
@@ -56,13 +56,23 @@ f <- f <- curl("https://raw.githubusercontent.com/fuzzyatelin/fuzzyatelin.github
 d <- read.csv(f, header = TRUE, sep = ",", stringsAsFactors = FALSE)
 head(d)
 ```
-
 ```{r}
-aggregate(x = d["female"], by = d["age"], FUN = "mean", na.rm = TRUE)
+library(dplyr)
+df <- tbl_df(d)
+dffemale <- filter(df, gender == "Female") 
+head(dffemale)
 ```
+```{r}
+library(dplyr)
+df <- tbl_df(d)
+dfmale <- filter(df, gender == "Male") 
+head(dfmale)
+```
+
+
 #Quiz 2
 I dot know how to do this so I'll be seeing you in office hours
-```{r}
+```{r, eval=FALSE}
 f$female <- f$gender(Male=FALSE)
 ```
 ```{r}
@@ -71,6 +81,14 @@ df2
 ```
 im not sure how to use the mutate thing 
 ```{r}
+library(dplyr)
+df2male <- filter(df2, gender == "female") 
+head(df2male)
+```
+
+
+
+```{r, eval=FALSE}
 heightgreater <-mutate(df2, height = height>65)
 ```
 ```{r}
@@ -80,3 +98,108 @@ zombies_killed <- seq(1,1000)
 plot(height, zombies_killed, type="l")
 ```
 I belive this is just the general height and im trying to figure out how to break height into two fiffrent catagories but cant figure that out or how to get just females
+#Quiz 3
+```{r}
+library(ggplot2)
+library(lmodel2)
+library(curl)
+library(gridExtra)
+```
+
+```{r}
+#okay so i dont know how make it just do med in this short a time but ill try to do the rest
+
+head(d)
+```
+```{r}
+m <- lm(years_of_education ~ age, data = d)
+m
+```
+```{r}
+names(m)
+```
+```{r}
+g <- ggplot(data = d, aes(x = age, y = years_of_education))
+g <- g + geom_point()
+g <- g + geom_smooth(method = "lm", formula = y ~ x)
+g
+```
+this looks really weird and wrong but im going to go with it for now
+```{r}
+m <- lm(data = d, years_of_education ~ age)
+h_hat <- predict(m, newdata = data.frame(age = d$age))
+df <- data.frame(cbind(d$age, d$age, h_hat))
+names(df) <- c("x", "y", "yhat")
+head(df)
+```
+
+
+
+```{r}
+ci <- predict(m, newdata = data.frame(age = d$age), interval = "confidence", 
+    level = 0.95)  # for a vector of values
+head(ci)
+```
+```{r}
+df <- cbind(df, ci)
+names(df) <- c("x", "y", "yhat", "CIfit", "CIlwr", "CIupr")
+head(df)
+```
+```{r}
+g <- ggplot(data = df, aes(x = x, y = y))
+g <- g + geom_point(alpha = 1/2)
+g <- g + geom_line(aes(x = x, y = CIfit), colour = "black")
+g <- g + geom_line(aes(x = x, y = CIlwr), colour = "blue")
+g <- g + geom_line(aes(x = x, y = CIupr), colour = "blue")
+g
+```
+okay I got this but this also looks wrong, not quite sure why byt im trying to figure that out now. I just need a lot of time to figure this out.
+```{r}
+v <- seq(from = 10, to = 30, by = 1)
+m <- lm(data = d, years_of_education ~ age)
+ci <- predict(m, newdata = data.frame(age = v), interval = "confidence", level = 0.95)
+plot(data = d, years_of_education ~ age)
+lines(x = v, y = ci[, 1], col = "black")
+lines(x = v, y = ci[, 2], col = "blue")
+lines(x = v, y = ci[, 3], col = "blue")
+```
+this looks betterr but I's still trying to find out how to do color and make it just med students people
+```{r}
+library(lattice)
+```
+```{r}
+t <- xyplot(years_of_education ~ age, group=gender, data=d,
+       auto.key=list(space="right"),
+       jitter.x=TRUE, jitter.y=TRUE)
+t
+```
+```{r, eval=FALSE}
+ci <- predict(t, newdata = data.frame(age = v), interval = "confidence", level = 0.95)
+plot(data = d, years_of_education ~ age)
+lines(x = v, y = ci[, 1], col = "black")
+lines(x = v, y = ci[, 2], col = "blue")
+lines(x = v, y = ci[, 3], col = "blue")
+```
+sorry this is what I have now im trying to fugure out how to combind the color cordinated one and the ci on it
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
