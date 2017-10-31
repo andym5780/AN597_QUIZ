@@ -108,25 +108,32 @@ library(gridExtra)
 
 ```{r}
 #okay so i dont know how make it just do med in this short a time but ill try to do the rest
-
-head(d)
 ```
+
 ```{r}
-m <- lm(years_of_education ~ age, data = d)
+library(dplyr)
+df <- tbl_df(d)
+dfmed <- filter(df, major == "medicine/nursing") 
+head(dfmed)
+```
+
+```{r}
+m <- lm(years_of_education ~ age, data = dfmed)
 m
 ```
 ```{r}
 names(m)
 ```
 ```{r}
-g <- ggplot(data = d, aes(x = age, y = years_of_education))
+library(ggplot2)
+g <- ggplot(data = dfmed, aes(x = age, y = years_of_education))
 g <- g + geom_point()
 g <- g + geom_smooth(method = "lm", formula = y ~ x)
 g
 ```
 this looks really weird and wrong but im going to go with it for now
 ```{r}
-m <- lm(data = d, years_of_education ~ age)
+m <- lm(data = dfmed, years_of_education ~ age)
 h_hat <- predict(m, newdata = data.frame(age = d$age))
 df <- data.frame(cbind(d$age, d$age, h_hat))
 names(df) <- c("x", "y", "yhat")
@@ -156,9 +163,9 @@ g
 okay I got this but this also looks wrong, not quite sure why byt im trying to figure that out now. I just need a lot of time to figure this out.
 ```{r}
 v <- seq(from = 10, to = 30, by = 1)
-m <- lm(data = d, years_of_education ~ age)
+m <- lm(data = dfmed, years_of_education ~ age)
 ci <- predict(m, newdata = data.frame(age = v), interval = "confidence", level = 0.95)
-plot(data = d, years_of_education ~ age)
+plot(data = dfmed, years_of_education ~ age)
 lines(x = v, y = ci[, 1], col = "black")
 lines(x = v, y = ci[, 2], col = "blue")
 lines(x = v, y = ci[, 3], col = "blue")
@@ -168,7 +175,7 @@ this looks betterr but I's still trying to find out how to do color and make it 
 library(lattice)
 ```
 ```{r}
-t <- xyplot(years_of_education ~ age, group=gender, data=d,
+t <- xyplot(years_of_education ~ age, group=gender, data=dfmed,
        auto.key=list(space="right"),
        jitter.x=TRUE, jitter.y=TRUE)
 t
@@ -181,8 +188,12 @@ lines(x = v, y = ci[, 2], col = "blue")
 lines(x = v, y = ci[, 3], col = "blue")
 ```
 sorry this is what I have now im trying to fugure out how to combind the color cordinated one and the ci on it
+```{r}
+ggplot(data=d, aes(x=,y=),color=gender)
+scale_color_manual(values=c("blue","pink"))
+```
 
-
+sorry this is a little late I just figured out how to filter out major, I totalt blanked until right now
 
 
 
